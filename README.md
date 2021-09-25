@@ -1,12 +1,22 @@
 # [Tinyproxy](https://tinyproxy.github.io) on [fly.io](https://fly.io)
 
+## Install deps
+
+```sh
+curl -L https://fly.io/install.sh | sh
+export PATH="$HOME/.fly/bin:$PATH"
+
+go install github.com/tomwright/dasel/cmd/dasel@master
+```
+
 ## Deploy
 
 ```sh
 export PROXY_USER='<your-user>'
 export PROXY_PASSWORD='<your-password>'
 
-fly init --import=fly-template.toml
+fly launch  # skip deploy
+dasel put string .app $(dasel -f fly.toml -p toml -s .app) -p toml -f fly-template.toml -o fly.toml
 fly deploy --build-arg USER="$PROXY_USER" --build-arg PASSWORD="$PROXY_PASSWORD"
 ```
 
